@@ -237,8 +237,9 @@ setInputImage(ImageType * newImData)
   }
     
   cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
-  changeSlice(((maxSliceNum() -1)/2));
-  update();
+  this->changeSlice(((this->maxSliceNum() -1)/2));
+  this->updateGeometry();
+  this->update();
 }
 
 
@@ -1465,6 +1466,18 @@ void QtGlSliceView::resizeEvent(QResizeEvent* event)
 }
 
 
+QSize QtGlSliceView::minimumSizeHint()const
+{
+  return this->sizeHint();
+}
+
+QSize QtGlSliceView::sizeHint()const
+{
+  qDebug() << "sizeHint: " << cWinSizeX << cWinSizeY;
+  return QSize(cWinSizeX, cWinSizeY);
+}
+
+
 void QtGlSliceView::size(int w, int h)
 {
   update();
@@ -1473,13 +1486,13 @@ void QtGlSliceView::size(int w, int h)
 
 bool QtGlSliceView::hasHeightForWidth() const
 {
-  return true;
+  return cWinSizeX && cWinSizeY;
 }
 
 
 int QtGlSliceView::heightForWidth(int width) const
 {
-  return width;
+  return cWinSizeY ? (width * cWinSizeX) / cWinSizeY : width;
 }
 
 
